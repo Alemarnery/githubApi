@@ -1,22 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import github from "./api/github";
 
 function App() {
+  const [commits, setCommits] = useState([]);
+
+  useEffect(() => {
+    async function getCommitHistory() {
+      const { data } = await github.get("/commits");
+      setCommits(data);
+    }
+
+    if (!commits.length > 0) {
+      getCommitHistory();
+    }
+  }, [commits]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {commits.map((commit) => {
+        return <div>{commit.sha}</div>;
+      })}
     </div>
   );
 }
