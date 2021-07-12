@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import github from "./api/github";
+import moment from "moment";
 
 function App() {
   const [commits, setCommits] = useState([]);
@@ -15,11 +16,25 @@ function App() {
     }
   }, [commits]);
 
+  console.log(commits);
+
   return (
     <div className="App">
-      {commits.map((commit) => {
-        return <div>{commit.sha}</div>;
-      })}
+      <ul class="list-group">
+        {commits.map(({ sha, commit }) => {
+          return (
+            <li class="list-group-item" key={sha}>
+              <div>
+                <h3>{commit.message}</h3>
+              </div>
+              <div>
+                {commit.committer.name} committed{" "}
+                {moment(commit.committer.date).fromNow()}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
